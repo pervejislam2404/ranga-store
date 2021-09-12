@@ -1,5 +1,5 @@
 const loadProducts = () => {
-    const url = `https://fakestoreapi.com/products`;
+    const url = `https://raw.githubusercontent.com/ProgrammingHero1/ranga-store-api/main/ranga-api.json?fbclid=IwAR21rttFTjSgmkam4AJLBjA2bGxUab1ijzvHrMmiTOF8wpqFrEq50JGDWSc`;
     fetch(url)
         .then((response) => response.json())
         .then((data) => showProducts(data));
@@ -23,8 +23,16 @@ const showProducts = (products) => {
                <h3 class="card-title">${product.title}</h3>
                <p>Category: ${product.category}</p>
                <h2>Price: $ ${product.price}</h2>
+               <p>
+                  <i class="fas fa-star-half-alt"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                  <span> ${product.rating.rate}</span>
+                  <span> (${product.rating.count})</span>
+                   
+               </p>
                <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="btn btn-success">Add to cart</button>
-               <button id="details-btn" class="btn btn-danger onclick="setDetails(${product.id})">Details</button>
+               <button id="details-btn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="setDetails(${product.id})">Details</button>
              </div>
        </div>
       
@@ -75,6 +83,7 @@ const updateTaxAndCharge = () => {
         setInnerText("delivery-charge", 60);
         setInnerText("total-tax", priceConverted * 0.4);
     }
+    setTotal();
 };
 
 //grandTotal update function
@@ -89,5 +98,24 @@ const setDetails = id => {
     const url = `https://fakestoreapi.com/products/${id}`;
     fetch(url)
         .then((response) => response.json())
-        .then(data => console.log(data))
+        .then(data => {
+            // document.getElementById('ratting-point').innerText = ;
+            // document.getElementById('ratting-count').innerText = ``;
+        })
+}
+
+// innerText to value generator
+const getTextValue = id => {
+    const idName = document.getElementById(id).innerText;
+    const idValue = parseFloat(idName);
+    return idValue;
+}
+
+
+const setTotal = () => {
+    const totalPrice = getTextValue('price');
+    const deliveryCost = getTextValue('delivery-charge');
+    const totalTax = getTextValue('total-tax');
+    const inTotal = totalPrice + deliveryCost + totalTax;
+    document.getElementById("total").innerText = inTotal.toFixed(2);
 }
