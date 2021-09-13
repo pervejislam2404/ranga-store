@@ -12,14 +12,14 @@ const showProducts = (products) => {
     for (const product of allProducts) {
         const image = product.image;
         const div = document.createElement("div");
-        div.classList.add("col-4");
+        div.className = "col-lg-4 col-md-6 col-12";
         div.innerHTML = `
       
           <div class="card shadow-lg">
-            <div class="p-5 mx-5">
+             <div class="p-lg-5 p-1 mx-lg-5 mx-2">
                 <img class="product-image card-img card-img-top" src=${image}></img>
              </div>
-            <div class="card-body bg-light p-4">
+             <div class="card-body bg-light p-lg-4 p-md-4 p-1">
                <h3 class="card-title">${product.title}</h3>
                <p>Category: ${product.category}</p>
                <h2>Price: $ ${product.price}</h2>
@@ -31,8 +31,10 @@ const showProducts = (products) => {
                   <span> (${product.rating.count})</span>
                    
                </p>
-               <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="btn btn-success">Add to cart</button>
-               <button id="details-btn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="setDetails(${product.id})">Details</button>
+               <div >
+               <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="btn btn-info">Add to cart</button>
+               <button id="details-btn" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="setDetails(${product.id})">Details</button>
+               </div>
              </div>
        </div>
       
@@ -40,15 +42,17 @@ const showProducts = (products) => {
         document.getElementById("all-products").appendChild(div);
     }
 };
+
 let count = 0;
 const addToCart = (id, price) => {
     count = count + 1;
     updatePrice("price", price);
 
     updateTaxAndCharge();
+    // product-quantity
     document.getElementById("total-Products").innerText = count;
 };
-
+// converter
 const getInputValue = (id) => {
     const element = document.getElementById(id).innerText;
     const converted = parseInt(element);
@@ -65,7 +69,8 @@ const updatePrice = (id, value) => {
 
 // set innerText function
 const setInnerText = (id, value) => {
-    document.getElementById(id).innerText = Math.round(value);
+    // document.getElementById(id).innerText = Math.round(value);
+    document.getElementById(id).innerText = parseFloat(value).toFixed(2);
 };
 
 // update delivery charge and total Tax
@@ -94,13 +99,17 @@ const updateTotal = () => {
     document.getElementById("total").innerText = grandTotal;
 };
 
+// details-setting-at-modal 
 const setDetails = id => {
     const url = `https://fakestoreapi.com/products/${id}`;
     fetch(url)
         .then((response) => response.json())
         .then(data => {
-            // document.getElementById('ratting-point').innerText = ;
-            // document.getElementById('ratting-count').innerText = ``;
+            // setting-data-from-api-to-modal
+            document.getElementById('modal-img').src = data.image;
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-description').innerText = data.description;
+            document.getElementById('modal-price').innerText = data.price;
         })
 }
 
@@ -111,7 +120,7 @@ const getTextValue = id => {
     return idValue;
 }
 
-
+// total-calculate-and-set
 const setTotal = () => {
     const totalPrice = getTextValue('price');
     const deliveryCost = getTextValue('delivery-charge');
